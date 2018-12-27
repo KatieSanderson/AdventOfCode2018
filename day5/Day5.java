@@ -7,16 +7,19 @@ import java.util.Scanner;
 
 public class Day5 {
 
+	private final File file;
+
 	public static void main(String[] args) throws FileNotFoundException {
-		Day5 day = new Day5();
-		File file = new File("src\\day5\\input.txt");
+		Day5 day = new Day5(new File("src\\day5\\inputDay5.txt"));
+		day.solve();
+	}
+
+	public void solve() throws FileNotFoundException {
 		int minLength = Integer.MAX_VALUE;
 		for (int i = 0; i < 26; i++) {
 			Character current = new Character((char) (i + 'A'));
-			System.out.println("char " + current + " has length of " + day.removeChar(current, file));
-			minLength = Math.min(minLength, day.removeChar(current, file));
+			minLength = Math.min(minLength, removeChar(current, file));
 		}
-		System.out.println("min length " + minLength);
 		int maxOccur = 0;
 		Map<Character, Integer> charOccurences = new HashMap<>();
 		StringBuilder builder = new StringBuilder();
@@ -30,12 +33,14 @@ public class Day5 {
 				charOccurences.put(current, 1);
 			}
 		}
-		System.out.println(builder.toString());
 		for (Map.Entry <Character, Integer> entry : charOccurences.entrySet()) {
 			System.out.println(entry.getKey() + " would have length " + (builder.length() - entry.getValue()));
 		}
 		System.out.println("The smallest length is " + (builder.length() - maxOccur));
-		scanner.close();
+	}
+
+	public Day5(File file) {
+		this.file = file;
 	}
 
 	public int removeChar(char key, File file) throws FileNotFoundException {
