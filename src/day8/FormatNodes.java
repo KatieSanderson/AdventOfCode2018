@@ -1,125 +1,72 @@
-<<<<<<< HEAD
 package day8;
-
-import java.util.Stack;
 
 public class FormatNodes {
 
-	private int metadataSum;
 	private int current;
-	private Stack<Integer> childCount;
-	private Stack<Integer> metadataCount;
 	private int[] nums;
-
+	private Node headNode;
 
 	public FormatNodes(int[] nums) {
 		this.nums = nums;
-		this.childCount = new Stack<>();
-		this.metadataCount = new Stack<>();
-		findNodes();
-	}
-
-	private void findNodes() {
-		current = 0;
-		while (current < nums.length) {
-			addCounts();
-			if (childCount.isEmpty()) {
-				while (!metadataCount.isEmpty()) {
-					addMetadata();
-				}
-			}
-			while (!childCount.isEmpty() && childCount.peek() == 0) {
-				addMetadata();
-			}
-		}
-		System.out.println("metadataSum: " + metadataSum);
-	}
-
-	private void addMetadata() {
-		childCount.pop();
-		int count = metadataCount.pop();
-		for (int i = 0; i < count; i++) {
-			metadataSum += nums[current];
-			current++;
-		}
-	}
-
-	private void addCounts() {
-		if (!childCount.isEmpty()) {
-			childCount.push(childCount.pop() - 1);
-		}
-		childCount.push(nums[current]);
-		current++;
-		metadataCount.push(nums[current]);
-		current++;
-	}
-
-	public int getMetadataSum() {
-		return metadataSum;
-	}
-
-	public void setMetadataSum(int metadataSum) {
-		this.metadataSum = metadataSum;
-	}
-
-}
-=======
-package day8;
-
-import java.util.Stack;
-
-public class FormatNodes {
-
-	private int metadataSum;
-	private int current;
-	private Stack<Integer> childCount;
-	private Stack<Integer> metadataCount;
-	private int[] nums;
-
-
-	public FormatNodes(int[] nums) {
-		this.nums = nums;
-		this.childCount = new Stack<>();
-		this.metadataCount = new Stack<>();
 	}
 
 	public void findNodes() {
 		current = 0;
-		while (current < nums.length) {
-			addCounts();
-			if (childCount.isEmpty()) {
-				while (!metadataCount.isEmpty()) {
-					addMetadata();
-				}
-			}
-			while (!childCount.isEmpty() && childCount.peek() == 0) {
-				addMetadata();
-			}
-		}
+		headNode = new Node(nums[current], nums[current + 1]);
+		current += 2;
+		addChildren(headNode);
+		calculateNodeSumWithChildren(headNode);
 	}
 
-	private void addMetadata() {
-		childCount.pop();
-		int count = metadataCount.pop();
+
+	private void addChildren(Node parent) {
+		int count = parent.childrenCount;
 		for (int i = 0; i < count; i++) {
-			metadataSum += nums[current];
-			current++;
+			Node currentChild = new Node(nums[current], nums[current + 1]);
+			current += 2;
+			parent.children.add(currentChild);
+			if (currentChild.childrenCount == 0) {
+				calculateNodeSumNoChildren(currentChild);
+			} else {
+				addChildren(currentChild);
+				calculateNodeSumWithChildren(currentChild);
+			}
 		}
 	}
 
-	private void addCounts() {
-		if (!childCount.isEmpty()) {
-			childCount.push(childCount.pop() - 1);
-		}
-		childCount.push(nums[current]);
-		current++;
-		metadataCount.push(nums[current]);
-		current++;
+	public int getNodeSum(Node node) {
+		return node.nodeSum;
 	}
 
-	public int getMetadataSum() {
-		return metadataSum;
+	public void calculateNodeSumNoChildren(Node node) {
+		int nodeSum = 0;
+		int count = node.metadataCount;
+		for (int i = 0; i < count; i++) {
+			int currentMetaData = nums[current + i];
+			node.metadata.add(currentMetaData);
+			nodeSum += currentMetaData;
+		}
+		node.nodeSum = nodeSum;
+		current += count;
+	}
+
+	private void calculateNodeSumWithChildren(Node node) {
+		int count = node.metadataCount;
+		int nodeSum = 0;
+		for (int i = 0; i < count; i++) {
+			int currentMetaData = nums[current + i] - 1;
+			node.metadata.add(currentMetaData);
+			if (currentMetaData < node.children.size()) {
+				int childSum = node.children.get(currentMetaData).nodeSum;
+				nodeSum += childSum;
+			}
+		}
+		node.nodeSum = nodeSum;
+		current += count;
+	}
+
+	public Node getHeadNode() {
+		return this.headNode;
 	}
 
 }
->>>>>>> Added tests to Day8

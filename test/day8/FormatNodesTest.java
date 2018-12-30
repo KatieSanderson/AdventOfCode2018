@@ -16,7 +16,7 @@ public class FormatNodesTest {
 
 		formatNodes.findNodes();
 
-		Assert.assertEquals(15, formatNodes.getMetadataSum());
+		Assert.assertEquals(15, formatNodes.getHeadNode().nodeSum);
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class FormatNodesTest {
 
 		formatNodes.findNodes();
 
-		Assert.assertEquals(39, formatNodes.getMetadataSum());
+		Assert.assertEquals(0, formatNodes.getHeadNode().nodeSum);
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class FormatNodesTest {
 
 		formatNodes.findNodes();
 
-		Assert.assertEquals(39, formatNodes.getMetadataSum());
+		Assert.assertEquals(39, formatNodes.getHeadNode().nodeSum);
 	}
 
 	@Test
@@ -43,6 +43,6 @@ public class FormatNodesTest {
 
 		formatNodes.findNodes();
 
-		Assert.assertEquals(138, formatNodes.getMetadataSum());
+		Assert.assertEquals(66, formatNodes.getHeadNode().nodeSum);
 	}
 }
